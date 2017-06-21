@@ -68,6 +68,7 @@ tmux send-keys "rosrun rviz rviz -d $MAPPING_HOME/tsc_config.rviz"
 tmux select-window -t $SESSION:6
 tmux split-window -v
 tmux select-pane -t 0
+#tmux send-keys "rosrun map_server map_saver -f $ROBOT_FILES/$1_raw.yaml"
 tmux send-keys "rosrun map_server map_saver $ROBOT_FILES/$1_raw.yaml"
 tmux resize-pane -D 30
 tmux select-pane -t 1
