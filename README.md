@@ -49,4 +49,4 @@ The map files have been created in TopologicalMapMaker/robot_files/ and can be m
 
 It may be beneficial to clean the map image file using gimp before using it. Node and edges can be edited in Rviz by checking the 'UpdateNode' and 'EdgeUpdate' boxes. Under 'Update Topic' subscribe to '/topological_map_add_rm_node/update' and 'topological_map_edges/update' respectively.
 
-![adding_edges](/assets/adding_edges.png)
+![adding_edges](assets/adding_edges.png)
