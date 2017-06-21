@@ -1,0 +1,79 @@
+#!/bin/bash
+
+if [ -z $1 ] || [ -z $2 ]; then
+echo "Usage: lucie_start_mapping.sh name_of_topological_map path_to_database";
+exit;
+fi
+
+SESSION=$USER
+MAPPING_HOME=$HOME/TopologicalMapMaking
+ROBOT_FILES=$MAPPING_HOME/robot_files
+NAV_MAP=$ROBOT_FILES/collect_data_map_cropped.yaml
+DATABASE=$2
+WAYPOINTS=$1
+
+tmux -2 new-session -d -s $SESSION
+# Setup a window for tailing log files
+tmux new-window -t $SESSION:0 -n 'roscore'
+tmux new-window -t $SESSION:1 -n 'mongo'
+tmux new-window -t $SESSION:2 -n 'robot_bringup'
+tmux new-window -t $SESSION:3 -n 'cameras'
+tmux new-window -t $SESSION:4 -n 'slam gmapping'
+tmux new-window -t $SESSION:5 -n 'RViz'
+tmux new-window -t $SESSION:6 -n 'Map Save'
+
+tmux select-window -t $SESSION:0
+tmux split-window -h
+tmux select-pane -t 0
+tmux send-keys "roscore" C-m
+tmux resize-pane -U 30
+tmux select-pane -t 1
+tmux send-keys "htop" C-m
+
+tmux select-window -t $SESSION:1
+tmux split-window -v
+tmux select-pane -t 0
+tmux send-keys "roslaunch mongodb_store mongodb_store.launch db_path:=$DATABASE port:=62345"
+tmux resize-pane -D 30
+tmux select-pane -t 1
+# tmux send-keys "robomongo"
+tmux send-keys "echo 'Make sure the path to the database already exists'" C-m
+tmux select-pane -t 0
+
+tmux select-window -t $SESSION:2
+tmux send-keys "roslaunch strands_bringup strands_robot.launch machine:=localhost user:=$USER with_mux:=False js:=/dev/input/js0 laser:=/dev/ttyUSB0 scitos_config:=/opt/ros/indigo/share/scitos_mira/resources/SCITOSDriver.xml"
+
+tmux select-window -t $SESSION:3
+tmux send-keys "roslaunch strands_bringup strands_cameras.launch machine:=localhost user:=$USER head_camera:=True head_ip:=luciel head_user:=strands chest_camera:=True chest_ip:=localhost chest_user:=$USER"
+
+tmux select-window -t $SESSION:4
+tmux split-window -h
+tmux select-pane -t 0
+tmux send-keys   # "rosrun gmapping slam_gmapping"
+tmux resize-pane -U 30
+tmux select-pane -t 1
+# Optional, press on the joystick [LB] + [A], should see 'Joy' 4 times.
+tmux send-keys "rosrun topological_utils joy_add_waypoint.py $ROBOT_FILES/$1_waypoints.csv"
+'tmux select-pane -t 0
+
+tmux select-window -t $SESSION:5
+tmux send-keys "rosrun rviz rviz -d $MAPPING_HOME/tsc_config.rviz"
+
+
+tmux select-window -t $SESSION:6
+tmux split-window -h
+tmux select-pane -t 0
+# Save map
+tmux send-keys "rosrun map_server map_saver -f $1"
+
+
+
+
+
+# Set default window
+tmux select-window -t $SESSION:0
+
+# Attach to session
+tmux -2 attach-session -t $SESSION
+
+tmux setw -g mode-mouse on

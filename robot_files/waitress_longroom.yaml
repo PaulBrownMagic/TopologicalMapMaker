@@ -1,0 +1,6 @@
+free_thresh: 0.196
+image: waitress_longroom.pgm
+negate: 0
+occupied_thresh: 0.65
+origin: [-5.299999999999997, -23.39999999999999, 0.0]
+resolution: 0.05
