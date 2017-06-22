@@ -1,5 +1,5 @@
 # Topological Map Maker
-A new topological map can be created alongside a new metric map using the tmux script "lucie_start_mapping.sh" and following the instructions below. The program is run as ```./lucie_start_mapping.sh name_of_map path_to_database``` where ```name_of_map``` is what the map file will be called (```{name_of_map}.tmap```) and the name of the WayPoints in the database. If the database folder does not yet exist then the script will create it for you.
+A new topological map can be created alongside a new metric map using the tmux script "lucie_start_mapping.sh" and following the instructions below. The program is run as ```./lucie_start_mapping.sh name_of_map path_to_robot_files path_to_database``` where ```name_of_map``` is what the map file will be called (```{name_of_map}.tmap```) and the name of the WayPoints in the database. ```path_to_robot_files``` is where the yaml and other map files will be stored, the yaml hard-codes this path into its location of the image (pgm) file. If either the database directory or robot_files directory does not yet exist then the script will create it for you. If any arguments are missing, a usage example is printed to stdout and the process exits.
 
 ## Tmux useful keys
 - ```ctrl & B then 0``` change to session 0. Replace 0 with any number up to 7 to change between the sessions.
@@ -44,7 +44,7 @@ To get the WayPoints.csv file, exit the process running in session 4 on the righ
 ### Session 7
 The first pane creates a tmap file from the others already made. The second pane then inserts this data into the database.
 
-### Wrapping up
+## Wrapping up
 The map files have been created in TopologicalMapMaker/robot_files/ and can be moved to your prefered directory. The WayPoints have been inserted into the given database and called "```name_of_map```". The running processes can now be killed and tmux can be killed using the provided script: kill_tmux.sh.
 
 It may be beneficial to clean the map image file using gimp before using it. Node and edges can be edited in Rviz by checking the 'UpdateNode' and 'EdgeUpdate' boxes. Under 'Update Topic' subscribe to '/topological_map_add_rm_node/update' and 'topological_map_edges/update' respectively.
