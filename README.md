@@ -45,7 +45,7 @@ To get the WayPoints.csv file, exit the process running in session 4 on the righ
 The first pane creates a tmap file from the other files already made. The second pane then inserts this data into the database.
 
 ## Wrapping up
-The map files have been created in TopologicalMapMaker/robot_files/ and can be moved to your preferred directory. The WayPoints have been inserted into the given database and called "```name_of_map```". The running processes can now be killed and tmux can be killed using the provided script: kill_tmux.sh.
+The map files have been created in TopologicalMapMaker/robot_files/ and can be moved to your preferred directory. The WayPoints have been inserted into the given database and called "```name_of_map```". The running processes can now be killed. To kill tmux, use the provided script: kill_tmux.sh.
 
 It may be beneficial to clean the map image file using gimp before using it. Node and edges can be edited in Rviz by checking the 'UpdateNode' and 'EdgeUpdate' boxes. Under 'Update Topic' subscribe to '/topological_map_add_rm_node/update' and 'topological_map_edges/update' respectively.
 

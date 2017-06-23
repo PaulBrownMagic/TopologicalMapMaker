@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This program is for generating maps, both metric and topological.
+# "Usage: ./lucie_start_mapping.sh name_of_topological_map path_to_robot_files path_to_database"
+
 if [ -z $1 ] || [ -z $2 ] || [ -z $3 ]; then
 echo "Usage: ./lucie_start_mapping.sh name_of_topological_map path_to_robot_files path_to_database";
 exit;
@@ -70,8 +73,6 @@ tmux select-window -t $SESSION:4
 tmux split-window -h
 tmux select-pane -t 0
 tmux send-keys "rosrun gmapping slam_gmapping"
-# To charging station, reset odemetry (on-board menu) [B] to mark node, [A] to save at end
-# tmux send-keys "roslaunch topological_utils mapping.launch met_map:='$1_met' top_map:='$1'"
 tmux resize-pane -U 30
 tmux select-pane -t 1
 # Press [LB] + [A] on Joypad when running
