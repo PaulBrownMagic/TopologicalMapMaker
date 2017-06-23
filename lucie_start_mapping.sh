@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -z $1 ] || [ -z $2 ] || [ -z $3 ]; then
-echo "Usage: lucie_start_mapping.sh name_of_topological_map path_to_robot_files path_to_database";
+echo "Usage: ./lucie_start_mapping.sh name_of_topological_map path_to_robot_files path_to_database";
 exit;
 fi
 
@@ -18,6 +18,15 @@ echo "[INFO]    Making directory $3"
 mkdir -p $3;
 fi
 
+# User defined variables
+$HOSTNAME=lucie
+$HEADCAM=True
+$HEADCAM_HOSTNAME=luciel
+$CHESTCAM=True
+$CHESTCAM_HOSTNAME=lucie
+
+
+# Generated Variables
 SESSION=$USER
 MAPPING_HOME=$HOME/TopologicalMapMaking
 ROBOT_FILES=$2
@@ -52,10 +61,10 @@ tmux send-keys "robomongo"
 tmux select-pane -t 0
 
 tmux select-window -t $SESSION:2
-tmux send-keys "roslaunch strands_bringup strands_robot.launch machine:=localhost user:=$USER with_mux:=False js:=/dev/input/js0 laser:=/dev/ttyUSB0 scitos_config:=/opt/ros/indigo/share/scitos_mira/resources/SCITOSDriver.xml"
+tmux send-keys "roslaunch strands_bringup strands_robot.launch machine:=$HOSTNAME user:=$USER with_mux:=False js:=/dev/input/js0 laser:=/dev/ttyUSB0 scitos_config:=/opt/ros/indigo/share/scitos_mira/resources/SCITOSDriver.xml"
 
 tmux select-window -t $SESSION:3
-tmux send-keys "roslaunch strands_bringup strands_cameras.launch machine:=localhost user:=$USER head_camera:=True head_ip:=luciel head_user:=strands chest_camera:=True chest_ip:=localhost chest_user:=$USER"
+tmux send-keys "roslaunch strands_bringup strands_cameras.launch machine:=$HOSTNAME user:=$USER head_camera:=$HEADCAM head_ip:=$HEADCAM_HOSTNAME head_user:=$USER chest_camera:=$CHESTCAM chest_ip:=$CHESTCAM_HOSTNAME chest_user:=$USER"
 
 tmux select-window -t $SESSION:4
 tmux split-window -h
@@ -77,7 +86,7 @@ tmux select-window -t $SESSION:6
 tmux split-window -v
 tmux select-pane -t 0
 tmux send-keys "rosrun map_server map_saver -f $ROBOT_FILES/$1_raw"
-tmux resize-pane -D 30
+tmux resize-pane -D 20
 tmux select-pane -t 1
 tmux send-keys "rosrun map_server crop_map $ROBOT_FILES/$1_raw.yaml $ROBOT_FILES/$1"
 tmux select-pane -t 0
