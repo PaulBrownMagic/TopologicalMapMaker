@@ -1,19 +1,19 @@
 #!/bin/bash
 
-if [ -z $1 ] || [ -z $2 ]; then
-echo "Usage: lucie_start_mapping.sh name_of_topological_map path_to_database";
+if [ -z $1 ] || [ -z $2 ] || [ -z $3 ]; then
+echo "Usage: lucie_start_mapping.sh name_of_topological_map path_to_robot_files path_to_database";
 exit;
 fi
 
-if [ ! -d $2 ]; then
+if [ ! -d $3 ]; then
 # Make database directory for user
-mkdir -p $2;
+mkdir -p $3;
 fi
 
 SESSION=$USER
 MAPPING_HOME=$HOME/TopologicalMapMaking
-ROBOT_FILES=$MAPPING_HOME/robot_files
-DATABASE=$2
+ROBOT_FILES=$2
+DATABASE=$3
 
 tmux -2 new-session -d -s $SESSION
 # Setup a window for tailing log files
@@ -68,10 +68,10 @@ tmux send-keys "rosrun rviz rviz -d $MAPPING_HOME/tsc_config.rviz"
 tmux select-window -t $SESSION:6
 tmux split-window -v
 tmux select-pane -t 0
-tmux send-keys "rosrun map_server map_saver $ROBOT_FILES/$1_raw.yaml"
+tmux send-keys "rosrun map_server map_saver -f $ROBOT_FILES/$1_raw"
 tmux resize-pane -D 30
 tmux select-pane -t 1
-tmux send-keys "rosrun map_server crop_map $ROBOT_FILES/$1_raw.yaml $ROBOT_FILES/$1.yaml"
+tmux send-keys "rosrun map_server crop_map $ROBOT_FILES/$1_raw.yaml $ROBOT_FILES/$1"
 tmux select-pane -t 0
 
 tmux select-window -t $SESSION:7
