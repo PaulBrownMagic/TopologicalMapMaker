@@ -22,11 +22,11 @@ mkdir -p $3;
 fi
 
 # User defined variables
-$HOSTNAME=lucie
-$HEADCAM=True
-$HEADCAM_HOSTNAME=luciel
-$CHESTCAM=True
-$CHESTCAM_HOSTNAME=lucie
+HOSTNAME=localhost
+HEADCAM=True
+HEADCAM_HOSTNAME=luciel
+CHESTCAM=True
+CHESTCAM_HOSTNAME=lucie
 
 
 # Generated Variables

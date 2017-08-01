@@ -3,7 +3,7 @@ A new topological map can be created alongside a new metric map using the tmux s
 
 ## Tmux useful keys
 - ```ctrl & B then 0``` change to session 0. Replace 0 with any number up to 7 to change between the sessions.
-- ```ctrl & B then →``` change between panes using the arrow keys.
+- ```ctrl & B then ->`` change between panes using the arrow keys.
 - ```ctrl & B then D``` exit the tmux session. Note the session is still running and needs to be killed. Run ./kill_tmux.sh to really exit.
 
 ## Sessions in Tmux
@@ -34,7 +34,7 @@ This is to run Rviz with some useful options open. It will allow you to watch th
 ### Making the map.
 LUCIE can be driven by holding [LB] and using the left joystick. If the bumper is hit the motors will stop. Make sure the bumper isn't pressed and hit [start].
 
-WayPoints are set by pressing [LB] & [A], "JOY" will be printed to stdout in Session 4, right pane.
+WayPoints are set by pressing [LB] & [B], "JOY" will be printed to stdout in Session 4, right pane.
 
 ### Session 6
 This is part of saving the map. The top pane will save the map, creating the ```{name_of_map}_raw.pgm``` and ```{name_of_map}_raw.yaml``` files. The bottom pane will crop the map to create ```{name_of_map}.pgm, {name_of_map}.yaml```.
