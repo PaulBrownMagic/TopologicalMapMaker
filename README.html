@@ -1,0 +1,38 @@
+<h1 id="topological-map-maker">Topological Map Maker</h1>
+<p>A new topological map can be created alongside a new metric map using the tmux script &quot;lucie_start_mapping.sh&quot; and following the instructions below. The program is run as <code>./lucie_start_mapping.sh name_of_map path_to_robot_files path_to_database</code> where <code>name_of_map</code> is what the map file will be called (<code>{name_of_map}.yaml</code>) and the name of the WayPoints in the database. <code>path_to_robot_files</code> is where the yaml and other map files will be stored, the yaml hard-codes this path into its location of the image (pgm) file. If either the database directory or robot_files directory does not yet exist then the script will create it for you. If any arguments are missing, a usage example is printed to stdout and the process exits.</p>
+<h2 id="tmux-useful-keys">Tmux useful keys</h2>
+<ul>
+<li><code>ctrl &amp; B then 0</code> change to session 0. Replace 0 with any number up to 7 to change between the sessions.</li>
+<li>`<code>ctrl &amp; B then -&gt;</code> change between panes using the arrow keys.</li>
+<li><code>ctrl &amp; B then D</code> exit the tmux session. Note the session is still running and needs to be killed. Run ./kill_tmux.sh to really exit.</li>
+</ul>
+<h2 id="sessions-in-tmux">Sessions in Tmux</h2>
+<p>There are 7 sessions running in tmux, which are designed for the different tasks required in building a topological map.</p>
+<h3 id="session-0">Session 0</h3>
+<p>This runs roscore and htop to monitor processes. Both of these scripts run automatically so if there are no errors then change to session 1.</p>
+<h3 id="session-1">Session 1</h3>
+<p>The main pane runs mongodb, which will create your database at the path given and allow the WayPoints to be inserted once they have been created. Run it and leave it until you've finished.</p>
+<p>The second pane contains the command to run robomongo, which allows you to view the database in more detail. It is not required.</p>
+<h3 id="session-2">Session 2</h3>
+<p>This is robot_bringup and provides the lasers and joystick.</p>
+<h3 id="session-3">Session 3</h3>
+<p>This is to enable the cameras. The locations of the cameras are set by the variables <code>$HEADCAM_HOSTNAME</code> and <code>$CHESTCAM_HOSTNAME</code> at the start of the script.</p>
+<h3 id="session-4">Session 4</h3>
+<p>The first pane runs slam gmapping, which scans the environment to build a metric map. It is this that will provide the data for {name_of_map}<em>raw.pgm and {name</em>of_map}_raw.yaml files later.</p>
+<p>The second pane script is to get WayPoints simultaneously while mapping via the joypad. Run session 5 before beginning mapping.</p>
+<h3 id="session-5">Session 5</h3>
+<p>This is to run Rviz with some useful options open. It will allow you to watch the generation of the map.</p>
+<h3 id="making-the-map.">Making the map.</h3>
+<p>LUCIE can be driven by holding [LB] and using the left joystick. If the bumper is hit the motors will stop. Make sure the bumper isn't pressed and hit [start].</p>
+<p>WayPoints are set by pressing [LB] &amp; [B], &quot;JOY&quot; will be printed to stdout in Session 4, right pane.</p>
+<h3 id="session-6">Session 6</h3>
+<p>This is part of saving the map. The top pane will save the map, creating the <code>{name_of_map}_raw.pgm</code> and <code>{name_of_map}_raw.yaml</code> files. The bottom pane will crop the map to create <code>{name_of_map}.pgm, {name_of_map}.yaml</code>.</p>
+<p>To get the WayPoints.csv file, exit the process running in session 4 on the right hand side, which is the joy_map_waypoints.py program, by pressing <code>ctrl &amp; C</code>. This will then save the <code>{name_of_map}_waypoints.csv</code> file as it exits.</p>
+<h3 id="session-7">Session 7</h3>
+<p>The first pane creates a tmap file from the other files already made. The second pane then inserts this data into the database.</p>
+<h2 id="wrapping-up">Wrapping up</h2>
+<p>The map files have been created in TopologicalMapMaker/robot_files/ and can be moved to your preferred directory. The WayPoints have been inserted into the given database and called &quot;<code>name_of_map</code>&quot;. The running processes can now be killed. To kill tmux, use the provided script: kill_tmux.sh.</p>
+<p>It may be beneficial to clean the map image file using gimp before using it. Node and edges can be edited in Rviz by checking the 'UpdateNode' and 'EdgeUpdate' boxes. Under 'Update Topic' subscribe to '/topological_map_add_rm_node/update' and 'topological_map_edges/update' respectively.</p>
+<div class="figure">
+<img src="assets/adding_edges.png" alt="adding_edges" /><p class="caption">adding_edges</p>
+</div>

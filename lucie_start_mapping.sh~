@@ -15,25 +15,25 @@ mkdir -p $2;
 fi
 
 
-if [ ! -d $3/$1 ]; then
+if [ ! -d $3 ]; then
 # Make database directory for user
 echo "[INFO]    Making directory $3"
-mkdir -p $3/$1;
+mkdir -p $3;
 fi
 
 # User defined variables
-HOSTNAME=localhost
-HEADCAM=True
-HEADCAM_HOSTNAME=luciel
-CHESTCAM=True
-CHESTCAM_HOSTNAME=lucie
+$HOSTNAME=lucie
+$HEADCAM=True
+$HEADCAM_HOSTNAME=luciel
+$CHESTCAM=True
+$CHESTCAM_HOSTNAME=lucie
 
 
 # Generated Variables
 SESSION=$USER
 MAPPING_HOME=$HOME/TopologicalMapMaking
 ROBOT_FILES=$2
-DATABASE=$3/$1
+DATABASE=$3
 
 tmux -2 new-session -d -s $SESSION
 # Setup a window for tailing log files
